@@ -69,7 +69,12 @@ class ListarPastasEArquivos
 
 			if($qty > 1)
 			{
-				$pastaSuperior = $arrPastas[ $qty - 2 ];
+				$i = 0;
+				while ($i < $qty - 2)
+				{
+					$pastaSuperior.= $arrPastas[ $i ];
+					$i++;
+				}
 			}
 
 			$nomePasta = str_replace('|', '/',$nomePasta);
