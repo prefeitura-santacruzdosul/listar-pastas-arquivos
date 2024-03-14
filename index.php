@@ -70,9 +70,9 @@ class ListarPastasEArquivos
 			if($qty > 1)
 			{
 				$i = 0;
-				while ($i < $qty - 2)
+				while ($i < $qty - 1)
 				{
-					$pastaSuperior.= $arrPastas[ $i ];
+					$pastaSuperior.= ($pastaSuperior != '' ? '|' : '') . $arrPastas[ $i ];
 					$i++;
 				}
 			}
