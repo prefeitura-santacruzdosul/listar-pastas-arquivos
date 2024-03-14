@@ -46,36 +46,35 @@ class ListarPastasEArquivos
 
 	public function onListar($param)
 	{
-		$pastafisica = self::DIR_ROOT;
-		$pastasup = '';
-		$nomepasta = '';
+		$pastaFisica = self::DIR_ROOT;
+		$pastaSuperior = '';
+		$nomePasta = '';
 
-		$nomepasta = isset($param['path']) ? trim($param['path']) : '';
-		if($nomepasta == '.')
+		$nomePasta = isset($param['path']) ? trim($param['path']) : '';
+
+		if($nomePasta == '.')
 		{
-			$nomepasta = '';
+			$nomePasta = '';
 		}
 
-		if($nomepasta != '')
+		if($nomePasta != '')
 		{
 			// não deixa "sair" da pasta...
-			$nomepasta = str_replace(['..','/'],['',''], $nomepasta);
+			$nomePasta = str_replace(['..','/'],['',''], $nomePasta);
 
 			// mais de um nivel de pastas... ?
-			$arr = explode('|',$nomepasta);
-			$qty = count($arr);
+			$arrPastas = explode('|',$nomePasta);
+
+			$qty = count($arrPastas);
+
 			if($qty > 1)
 			{
-				$pastasup = $arr[ $qty - 2 ];
-			}
-			elseif($qty == 1)
-			{
-				$pastasup = reset($arr);
+				$pastaSuperior = $arrPastas[ $qty - 2 ];
 			}
 
-			$nomepasta = str_replace('|', '/',$nomepasta);
+			$nomePasta = str_replace('|', '/',$nomePasta);
 
-			$pastafisica.= '/' . $nomepasta;
+			$pastaFisica.= "/{$nomePasta}";
 		}
 		
 		$vetor = [];
@@ -83,7 +82,7 @@ class ListarPastasEArquivos
 		// só lista arquivos desta extensão...?
 		// $vExt = ['pdf','doc','odt','docx'];
 
-		$ponteiro  = opendir( $pastafisica );
+		$ponteiro  = opendir( $pastaFisica );
 		while($nome = readdir($ponteiro))
 		{
 			if($nome != '.' and $nome != '..' and $nome != 'index.htm' and $nome != '.git' and $nome != 'images')
@@ -94,21 +93,21 @@ class ListarPastasEArquivos
 		sort($vetor, SORT_STRING);
 
 
-		$this->tabela = '<table width=575 border=1 style="border-collapse:collapse;">';
+		$this->tabela = '<table >';
 
 		// linha com título -> nome da pasta ou lista de pastas...
 		$this->tabela.= '<tr>';
 
-		if($nomepasta == '')
+		if($nomePasta == '')
 		{
 			$this->tabela.= "<td style='background-color:#cacaca'><b>Pastas</b></td>";
 		}
 		else
 		{
-			// apontar para a pasta superior...
-			echo "<a href='?path={$pastasup}'><img src='images/folder_up.png'> Voltar - Pasta Acima</a><br>";
+			// apontar para a pasta superior ou raiz...
+			echo "<a href='?path={$pastaSuperior}'><img src='images/folder_up.png'> Voltar - Pasta Acima</a><br>";
 
-			$this->tabela.= "<td style='background-color:#cacaca'><b>{$nomepasta}</b></td>";
+			$this->tabela.= "<td style='background-color:#cacaca'><b>{$nomePasta}</b></td>";
 		}
 		$this->tabela.= '</tr>';
 
@@ -116,7 +115,7 @@ class ListarPastasEArquivos
 		{
 			$this->tabela.= '<tr>';
 
-			$teste = "{$pastafisica}/{$nome}";
+			$teste = "{$pastaFisica}/{$nome}";
 
 			// pasta ou arquivo ?
 			if (is_dir($teste))
@@ -126,7 +125,7 @@ class ListarPastasEArquivos
 				$pastax = str_replace('.|','',$pastax);
 				$this->tabela.= "<td><a href='?path={$pastax}' ><img src='images/pasta.png'>{$nome}</a></td>";
 			}
-			elseif(file_exists($teste) and $nomepasta != '')
+			elseif(file_exists($teste) and $nomePasta != '')
 			{
 				// não ta listando arquivos na pasta "raíz",
 				//	isto é, na mesma pasta do index.php...
