@@ -86,19 +86,13 @@ class ListarPastasEArquivos
 		$ponteiro  = opendir( $pastafisica );
 		while($nome = readdir($ponteiro))
 		{
-			if($nome != '.' and $nome != '..' and $nome != 'index.htm' and $nome != '.git')
+			if($nome != '.' and $nome != '..' and $nome != 'index.htm' and $nome != '.git' and $nome != 'images')
 			{
 				$vetor[] = $nome;
 			}
 		}
 		sort($vetor, SORT_STRING);
 
-
-		if($pastasup != '')
-		{
-			// apontar para a pasta superior...
-			echo "<a href='?path={$pastasup}'><img src='images/folder_up.png'> Voltar - Pasta Acima</a><br>";
-		}
 
 		$this->tabela = '<table width=575 border=1 style="border-collapse:collapse;">';
 
@@ -111,6 +105,9 @@ class ListarPastasEArquivos
 		}
 		else
 		{
+			// apontar para a pasta superior...
+			echo "<a href='?path={$pastasup}'><img src='images/folder_up.png'> Voltar - Pasta Acima</a><br>";
+
 			$this->tabela.= "<td style='background-color:#cacaca'><b>{$nomepasta}</b></td>";
 		}
 		$this->tabela.= '</tr>';
