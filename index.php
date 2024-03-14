@@ -22,24 +22,13 @@ class ListarPastasEArquivos
 {
 	const DIR_ROOT = '.';
 
-	private $tabela;
-	private $dirbase;
-
 	public function __construct()
 	{
-		$css = "
-		<style>
-		table {
-		  border-collapse: collapse;
-		  width: 100%;
-		}
-		th, td {
-		  padding: 8px;
-		  text-align: left;
-		  border-bottom: 1px solid #ddd;
-		}
-		tr:hover {background-color: #cacaca;}
-		</style>";
+		$css = "<style>
+				table { border-collapse: collapse;width: 100%; }
+				th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+				tr:hover {background-color: #cacaca;}
+				</style>";
 		echo $css;
 
 	}
@@ -47,8 +36,8 @@ class ListarPastasEArquivos
 	public function onListar($param)
 	{
 		$pastaFisica = self::DIR_ROOT;
+
 		$pastaSuperior = '';
-		$nomePasta = '';
 
 		$nomePasta = isset($param['path']) ? trim($param['path']) : '';
 
@@ -98,27 +87,27 @@ class ListarPastasEArquivos
 		sort($vetor, SORT_STRING);
 
 
-		$this->tabela = '<table >';
+		$table = '<table >';
 
 		// linha com título -> nome da pasta ou lista de pastas...
-		$this->tabela.= '<tr>';
+		$table.= '<tr>';
 
 		if($nomePasta == '')
 		{
-			$this->tabela.= "<td style='background-color:#cacaca'><b>Pastas</b></td>";
+			$table.= "<td style='background-color:#cacaca'><b>Pastas</b></td>";
 		}
 		else
 		{
 			// apontar para a pasta superior ou raiz...
 			echo "<a href='?path={$pastaSuperior}'><img src='images/folder_up.png'> Voltar - Pasta Acima</a><br>";
 
-			$this->tabela.= "<td style='background-color:#cacaca'><b>{$nomePasta}</b></td>";
+			$table.= "<td style='background-color:#cacaca'><b>{$nomePasta}</b></td>";
 		}
-		$this->tabela.= '</tr>';
+		$table.= '</tr>';
 
 		foreach($vetor as $i => $nome)
 		{
-			$this->tabela.= '<tr>';
+			$table.= '<tr>';
 
 			$teste = "{$pastaFisica}/{$nome}";
 
@@ -128,21 +117,21 @@ class ListarPastasEArquivos
 				// precisa remover o ponto . na frente...
 				$pastax = str_replace('/','|',$teste);
 				$pastax = str_replace('.|','',$pastax);
-				$this->tabela.= "<td><a href='?path={$pastax}' ><img src='images/pasta.png'>{$nome}</a></td>";
+				$table.= "<td><a href='?path={$pastax}' ><img src='images/pasta.png'>{$nome}</a></td>";
 			}
 			elseif(file_exists($teste) and $nomePasta != '')
 			{
 				// não ta listando arquivos na pasta "raíz",
 				//	isto é, na mesma pasta do index.php...
 				// link para o arquivo...
-				$this->tabela.= "<td><a href='{$teste}' target='_blank'><img src='images/download.png'>{$nome}</a></td>";
+				$table.= "<td><a href='{$teste}' target='_blank'><img src='images/download.png'>{$nome}</a></td>";
 			}
-			$this->tabela.= '</tr>';
+			$table.= '</tr>';
 		}
 
-		$this->tabela.= '</table>';
+		$table.= '</table>';
 
-		echo $this->tabela;
+		echo $table;
 	}
 
 }
