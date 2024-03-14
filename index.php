@@ -50,36 +50,32 @@ class ListarPastasEArquivos
 		$pastasup = '';
 		$nomepasta = '';
 
-		if(isset($param['path']))
+		$nomepasta = isset($param['path']) ? trim($param['path']) : '';
+		if($nomepasta == '.')
 		{
-			$nomepasta = trim($param['path']);
-			if($nomepasta == '.')
-			{
-				$nomepasta = '';
-			}
+			$nomepasta = '';
+		}
 
+		if($nomepasta != '')
+		{
 			// não deixa "sair" da pasta...
 			$nomepasta = str_replace(['..','/'],['',''], $nomepasta);
 
-			$arr = explode('|',$nomepasta);
 			// mais de um nivel de pastas... ?
-
-			if(count($arr) > 1)
+			$arr = explode('|',$nomepasta);
+			$qty = count($arr);
+			if($qty > 1)
 			{
-
-				// reset pega a primeira pasta...
-				// $pastasup = reset($arr);
-				// ... quando na verdade tenho q pegar o ultimo indice-1
-				$pastasup = $arr[ count($arr) - 2 ];
-				//$pastaatual = end($vet);
-
+				$pastasup = $arr[ $qty - 2 ];
 			}
+			elseif($qty == 1)
+			{
+				$pastasup = reset($arr);
+			}
+
 			$nomepasta = str_replace('|', '/',$nomepasta);
 
-			if($nomepasta != '')
-			{
-				$pastafisica.= '/' . $nomepasta;
-			}
+			$pastafisica.= '/' . $nomepasta;
 		}
 		
 		$vetor = [];
@@ -90,7 +86,7 @@ class ListarPastasEArquivos
 		$ponteiro  = opendir( $pastafisica );
 		while($nome = readdir($ponteiro))
 		{
-			if(($nome != '.')and($nome != '..')and($nome != 'index.htm'))
+			if($nome != '.' and $nome != '..' and $nome != 'index.htm' and $nome != '.git')
 			{
 				$vetor[] = $nome;
 			}
